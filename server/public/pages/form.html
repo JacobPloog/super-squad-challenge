@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap"
+      rel="stylesheet"
+    />
+    <title>Superhero Form</title>
+    <style>
+      .patua-one-regular {
+        font-family: "Patua One", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      body,
+      html {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+      }
+      body {
+        background-image: url("https://images.pexels.com/photos/16516/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1200");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      div.container {
+        background-image: url("https://static.vecteezy.com/system/resources/previews/007/486/342/original/abstract-red-comic-background-vector.jpg");
+        padding: 70px;
+        margin: 20px;
+        justify-content: center;
+        align-content: center;
+        /* border: 1px solid black; */
+        background-color: #fff;
+        border-radius: 50px;
+        box-shadow: 10px 7px 15px black;
+        color: white;
+        /* height: 50vh; */
+      }
+      form {
+        justify-content: center;
+        align-content: center;
+      }
+      input {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container patua-one-regular">
+      <h1>Super Sign-Up</h1>
+      <form action="/submit-form" method="POST">
+        <label for="name">Super Name:</label>
+        <input type="text" id="name" name="name" required /><br /><br />
+        <label for="powers">Superpower:</label><br />
+        <textarea
+          id="powers"
+          name="powers"
+          rows="4"
+          cols="50"
+          required
+        ></textarea
+        ><br /><br />
+        <input id="submit-button" type="submit" value="Submit" />
+      </form>
+    </div>
+    <div class="container patua-one-regular">
+      <h1>Super Management</h1>
+      <form id="updateForm">
+        <label for="currentName">Current name:</label>
+        <input type="text" id="currentName" required /><br /><br />
+        <label for="currentPowers">Current powers:</label>
+        <input type="text" id="currentPowers" required /><br /><br />
+        <label for="newName">New name:</label>
+        <input type="text" id="newName" required /><br /><br />
+        <label for="newPowers">New powers:</label>
+        <input type="text" id="newPowers" required /><br /><br />
+        <button type="submit">Update Superhero</button>
+      </form>
+      <h2>Delete Hero</h2>
+      <form id="delete-hero">
+        <label for="delete-name">Name: </label>
+        <input type="text" id="delete-name" /> <br />
+        <br />
+        <button type="submit">Delete Hero</button>
+      </form>
+    </div>
+    <div class="container patua-one-regular">
+      <h1>Superheroes:</h1>
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th style="padding: 0 5px 0 0">Super Name:</th>
+            <th style="padding: 0 0 0 5px">Superpower:</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+          <!-- data of users will be rendered here -->
+        </tbody>
+      </table>
+    </div>
+    <script>
+      document
+        .getElementById("updateForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const currentName = document.getElementById("currentName").value;
+          const newName = document.getElementById("newName").value;
+          try {
+            const response = await fetch(`/update-user/${currentName}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ newName }),
+            });
+            const data = await response.json();
+            console.log(data);
+            renderUsers();
+            // alert("Message is: " + data.message);
+          } catch (error) {
+            alert("Error updating user: " + error.message);
+          }
+        });
+      document
+        .getElementById("delete-hero")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const name = document.getElementById("delete-name").value;
+          try {
+            const response = await fetch(`/user/${name}`, {
+              method: "DELETE",
+            });
+            if (!response.ok) {
+              throw new Error("Error with network");
+            }
+            const data = await response.text();
+            console.log(data);
+            renderUsers();
+          } catch (error) {
+            console.error("something went wrong" + error.message);
+          }
+        });
+      async function fetchUsers() {
+        try {
+          const response = await fetch("/users");
+          if (!response.ok) {
+            throw new Error("Error fetching users. Response not ok");
+          }
+          // there could be an error getting response/fetching the endpoint
+          console.log(response);
+          const users = await response.json();
+          // there could be an error parsing the response
+          // console.log(users);
+          return users;
+        } catch (error) {
+          console.error("There was a problem");
+          console.error(error);
+        }
+      }
+
+      async function renderUsers() {
+        const tableBody = document.getElementById("userTableBody");
+        tableBody.innerHTML = "";
+        try {
+          const users = await fetchUsers();
+          if (Array.isArray(users) && users.length > 0) {
+            users.forEach((user) => {
+              const row = `<tr><td>${user.name}</td><td>${user.powers}</td></tr>`;
+              tableBody.innerHTML += row;
+            });
+          }
+        } catch (error) {}
+      }
+      document.addEventListener("DOMContentLoaded", renderUsers);
+    </script>
+  </body>
+</html>
