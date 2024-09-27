@@ -1,10 +1,24 @@
 [
   {
-    "name": "The Flash",
-    "powers": "Speed"
-  },
-  {
     "name": "Batguy",
     "powers": "$$$$"
+  },
+  {
+    "name": "super guy",
+    "powers": [
+      "flying\r\n"
+    ]
+  },
+  {
+    "name": "omar",
+    "powers": [
+      "nonchalant"
+    ]
+  },
+  {
+    "name": "Superr_Mayo",
+    "powers": [
+      "Flight, super vion, sce batman"
+    ]
   }
 ]
