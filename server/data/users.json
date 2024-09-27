@@ -1,14 +1,10 @@
 [
   {
-    "name": "Superman",
-    "powers": [
-      "Yes"
-    ]
+    "name": "The Flash",
+    "powers": "Speed"
   },
   {
     "name": "Batguy",
-    "powers": [
-      "$$$$"
-    ]
+    "powers": "$$$$"
   }
 ]

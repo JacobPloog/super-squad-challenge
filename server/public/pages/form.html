@@ -55,7 +55,7 @@
       <form action="/submit-form" method="POST">
         <label for="name">Super Name:</label>
         <input type="text" id="name" name="name" required /><br /><br />
-        <label for="powers">Superpower:</label><br />
+        <label for="powers">Superpowers:</label><br />
         <textarea
           id="powers"
           name="powers"
@@ -108,15 +108,21 @@
         .addEventListener("submit", async (e) => {
           e.preventDefault();
           const currentName = document.getElementById("currentName").value;
+          const currentPowers = document.getElementById("currentPowers").value;
           const newName = document.getElementById("newName").value;
+          const newPowers = document.getElementById("newPowers").value;
+
           try {
-            const response = await fetch(`/update-user/${currentName}`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ newName }),
-            });
+            const response = await fetch(
+              `/update-user/${currentName}/${currentPowers}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ newName, newPowers }),
+              }
+            );
             const data = await response.json();
             console.log(data);
             renderUsers();
